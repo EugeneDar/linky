@@ -2,11 +2,13 @@ import string
 import random
 import logging
 
+from app.services import Service
+
 
 KEY_SIZE = 8
 MAX_ATTEMPTS = 30
 
-links = {}
+service = Service()
 
 
 def _generate_key():
@@ -15,7 +17,7 @@ def _generate_key():
     while attempts < MAX_ATTEMPTS:
         characters = string.ascii_letters + string.digits
         key = ''.join(random.choice(characters) for _ in range(KEY_SIZE))
-        if key not in links:
+        if not service.exists(key):
             return key
         attempts += 1
 
@@ -24,7 +26,7 @@ def _generate_key():
 
 def _save_url(key, url):
     logging.info('Saved url: {} with key: {}'.format(url, key))
-    links[key] = url
+    service.put(key, url)
 
 
 def handle_create_link(url: str):
@@ -39,7 +41,7 @@ def handle_create_link(url: str):
 
 
 def handle_get_link(key: str):
-    if key in links:
-        return {'url': links[key]}
+    if service.exists(key):
+        return {'url': service.get(key)}
     else:
         return {"error": "Link not found"}

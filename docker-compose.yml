@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   myapp:
     build:
       context: .
@@ -9,7 +10,14 @@ services:
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     ports:
       - 8000:8000
-#    volumes:
-#      - ./app:/vol
-#    environment:
-#      - ID_SIZE=8
+    depends_on:
+      - "redis"
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "password"
+
+  redis:
+    image: redis
+    command: redis-server --requirepass password --port 6379
+    ports:
+      - "6379:6379"

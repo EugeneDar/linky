@@ -9,4 +9,4 @@ A simple API for link shortening built on FastAPI, Redis, Nginx
 
     curl -X POST "http://localhost:8000/create?url=https://example.com"
 
-    curl -X GET http://localhost:8000/link/7d9fg1dc
+    curl -X GET http://localhost:8000/link/KBQuX7qs
