@@ -1,7 +1,7 @@
 ## Description
 A simple API for link shortening built on FastAPI, Redis, Nginx
 
-## How to run server
+## How to run servers, balancer and database
 
     docker-compose up -d --build
 

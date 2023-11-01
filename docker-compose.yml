@@ -2,19 +2,38 @@ version: '3'
 
 services:
 
-  myapp:
+  nginx:
+    build:
+      context: .
+      dockerfile: DockerfileNginx
+    container_name: nginx
+    ports:
+      - "8000:8000"
+    depends_on:
+      - first_server
+      - second_server
+
+  first_server:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: server
-    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    container_name: server1
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
     ports:
-      - 8000:8000
+      - "8001:8001"
     depends_on:
-      - "redis"
-    environment:
-      REDIS_HOST: "redis"
-      REDIS_PASSWORD: "password"
+      - redis
+
+  second_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server2
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+    depends_on:
+      - redis
 
   redis:
     image: redis
